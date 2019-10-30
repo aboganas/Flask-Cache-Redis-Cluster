@@ -31,11 +31,11 @@ class RedisClusterCache(RedisCache):
     """Uses the Redis key-value store as a cache backend.
     The first argument can be either a string denoting address of the Redis
     server or an object resembling an instance of a
-    ``rediscluster.StrictRedisCluster`` class.
+    ``rediscluster.RedisCluster`` class.
     Note: Python Redis API already takes care of encoding unicode strings on
 
     Any additional keyword arguments will be passed to
-    ``rediscluster.StrictRedisCluster``.
+    ``rediscluster.RedisCluster``.
     """
 
     def __init__(self, host='localhost', port=6379, password=None,
@@ -43,13 +43,13 @@ class RedisClusterCache(RedisCache):
         BaseCache.__init__(self, default_timeout)
         if isinstance(host, string_types):
             try:
-                from rediscluster import StrictRedisCluster
+                from rediscluster import RedisCluster
             except ImportError:
                 raise RuntimeError('no redis cluster module found')
             if kwargs.get('decode_responses', None):
                 raise ValueError('decode_responses is not supported by '
                                  'RedisClusterCache.')
-            self._client = StrictRedisCluster(host=host,
+            self._client = RedisCluster(host=host,
                                               port=port,
                                               password=password,
                                               **kwargs)
